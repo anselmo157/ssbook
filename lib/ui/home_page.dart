@@ -9,85 +9,97 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
+  late TabController controller;
+
+  @override
+  void initState() {
+    controller = TabController(
+      initialIndex: 0,
+      length: 2,
+      vsync: this,
+    );
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     const Color primaryColor = Color(0xFF555555);
     const Color secondaryColor = Color(0xFFA076F2);
 
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Row(
-            children: const [
-              Text(
-                'SS',
-                style: TextStyle(
-                  color: primaryColor,
-                  fontSize: 33,
-                  fontFamily: 'BebasNeue',
-                ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: const [
+            Text(
+              'SS',
+              style: TextStyle(
+                color: primaryColor,
+                fontSize: 33,
+                fontFamily: 'BebasNeue',
               ),
-              Text(
-                'BOOK',
-                style: TextStyle(
-                  color: secondaryColor,
-                  fontSize: 33,
-                  fontFamily: 'BebasNeue',
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            Container(
-              width: 32,
-              height: 32,
-              margin: const EdgeInsets.only(right: 20),
-              child: CircleAvatar(
-                child: Image.asset('assets/images/avatar.png'),
+            ),
+            Text(
+              'BOOK',
+              style: TextStyle(
+                color: secondaryColor,
+                fontSize: 33,
+                fontFamily: 'BebasNeue',
               ),
             ),
           ],
-          bottom: TabBar(
-            indicatorColor: secondaryColor,
-            indicatorWeight: 4,
-            padding: EdgeInsets.only(left: 20, right: size.width * 0.3),
-            tabs: const [
-              Tab(
-                child: Text(
-                  'Meus livros',
-                  style: TextStyle(color: primaryColor, fontSize: 14),
-                ),
-              ),
-              Tab(
-                child: Text(
-                  'Emprestados',
-                  style: TextStyle(color: primaryColor, fontSize: 14),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomRight: Radius.elliptical(size.width * 0.1, 32.0),
-            ),
-          ),
         ),
-        body: TabBarView(
-          children: [
-            Container(
-              child: Text('1'),
+        actions: [
+          Container(
+            width: 32,
+            height: 32,
+            margin: const EdgeInsets.only(right: 20),
+            child: CircleAvatar(
+              child: Image.asset('assets/images/avatar.png'),
             ),
-            const Center(
+          ),
+        ],
+        bottom: TabBar(
+          controller: controller,
+          indicatorColor: secondaryColor,
+          indicatorWeight: 4,
+          padding: EdgeInsets.only(left: 20, right: size.width * 0.3),
+          tabs: const [
+            Tab(
               child: Text(
-                'Em progresso...',
-                style: TextStyle(color: primaryColor),
+                'Meus livros',
+                style: TextStyle(color: primaryColor, fontSize: 14),
+              ),
+            ),
+            Tab(
+              child: Text(
+                'Emprestados',
+                style: TextStyle(color: primaryColor, fontSize: 14),
               ),
             ),
           ],
+          onTap: (value) {
+            if (value == 1) {
+              controller.animateTo(0);
+            }
+          },
         ),
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomRight: Radius.elliptical(size.width * 0.1, 32.0),
+          ),
+        ),
+      ),
+      body: TabBarView(
+        controller: controller,
+        children: [
+          Container(
+            child: Text('1'),
+          ),
+          Container(),
+        ],
       ),
     );
   }
