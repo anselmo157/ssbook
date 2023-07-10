@@ -97,8 +97,11 @@ class _HomePageState extends State<HomePage>
         physics: const NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
-          Container(
-            child: Text('1'),
+          ListView.builder(
+            itemBuilder: ((context, index) => Text(
+                  index.toString(),
+                )),
+            itemCount: 100,
           ),
           Container(),
         ],
