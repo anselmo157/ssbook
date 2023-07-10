@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -93,6 +94,7 @@ class _HomePageState extends State<HomePage>
         ),
       ),
       body: TabBarView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: controller,
         children: [
           Container(
@@ -100,6 +102,32 @@ class _HomePageState extends State<HomePage>
           ),
           Container(),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          HttpLink link = HttpLink(
+              'https://us-central1-ss-devops.cloudfunctions.net/GraphQL');
+          GraphQLClient qlClient = GraphQLClient(
+            link: link,
+            cache: GraphQLCache(
+              store: HiveStore(),
+            ),
+          );
+
+          QueryResult queryResult = await qlClient.query(
+            QueryOptions(
+              document: gql('''query {
+  allBooks {
+    id
+    name
+    cover
+  }
+}'''),
+            ),
+          );
+
+          print(queryResult.data);
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
