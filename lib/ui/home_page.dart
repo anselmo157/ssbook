@@ -101,6 +101,43 @@ class _HomePageState extends State<HomePage>
           Container(),
         ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: secondaryColor,
+        unselectedItemColor: const Color(0xFF9E9E9E),
+        currentIndex: 0,
+        items: const [
+          BottomNavigationBarItem(
+            label: 'Início',
+            icon: Icon(
+              Icons.home,
+              size: 24,
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Adicionar',
+            tooltip: 'Adicionar',
+            icon: Icon(
+              Icons.add_circle,
+              size: 24,
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Buscar',
+            icon: Icon(
+              Icons.search,
+              size: 24,
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'Favoritos',
+            icon: Icon(
+              Icons.favorite,
+              size: 24,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
