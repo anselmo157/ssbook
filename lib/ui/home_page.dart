@@ -70,13 +70,21 @@ class _HomePageState extends State<HomePage>
             Tab(
               child: Text(
                 'Meus livros',
-                style: TextStyle(color: primaryColor, fontSize: 14),
+                style: TextStyle(
+                  color: primaryColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
             Tab(
               child: Text(
                 'Emprestados',
-                style: TextStyle(color: primaryColor, fontSize: 14),
+                style: TextStyle(
+                  color: primaryColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ],
