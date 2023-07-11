@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage>
             ),
           );
 
-          print(queryResult.data);
+          print(queryResult.data!['allBooks']);
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
