@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 
-class FavoriteAuthorsItem extends StatelessWidget {
+class FavoriteBookItem extends StatelessWidget {
   final String url;
   final String name;
-  final int booksCount;
+  final String author;
+  final bool isLast;
 
-  const FavoriteAuthorsItem({
+  const FavoriteBookItem({
     required this.url,
     required this.name,
-    required this.booksCount,
+    required this.author,
+    required this.isLast,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(left: 20, top: 20),
+      margin: EdgeInsets.only(left: 20, top: 20, right: isLast ? 20 : 0),
       width: 136,
       child: Wrap(
         direction: Axis.vertical,
@@ -38,6 +40,7 @@ class FavoriteAuthorsItem extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
+                color: Color(0xFF555555),
               ),
               maxLines: 2,
             ),
@@ -45,11 +48,12 @@ class FavoriteAuthorsItem extends StatelessWidget {
           SizedBox(
             width: 136,
             child: Text(
-              booksCount.toString(),
+              author,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
+                color: Color(0xFF757575),
               ),
             ),
           ),

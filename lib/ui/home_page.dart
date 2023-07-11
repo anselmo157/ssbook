@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:ssbook/models/author_model.dart';
 import 'package:ssbook/models/book_model.dart';
-import 'package:ssbook/ui/widgets/content_home_page.dart';
-import 'package:ssbook/ui/widgets/favorite_books.dart';
+import 'package:ssbook/ui/widgets/favorite_author.dart';
+import 'package:ssbook/ui/widgets/favorite_book.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -121,12 +121,12 @@ class _HomePageState extends State<HomePage>
             physics: const NeverScrollableScrollPhysics(),
             controller: controller,
             children: [
-              Container(
-                height: size.height * 2,
-                child: ContentHomePage(
-                  books: books,
-                  favoriteBooks: favoriteBooks,
-                  authors: authors,
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    FavoriteBook(favoriteBook: favoriteBooks),
+                    FavoriteAuthor(favoriteAuthor: authors),
+                  ],
                 ),
               ),
               Container(),
