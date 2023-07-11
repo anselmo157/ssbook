@@ -148,7 +148,6 @@ class _HomePageState extends State<HomePage>
           ),
           BottomNavigationBarItem(
             label: 'Adicionar',
-            tooltip: 'Adicionar',
             icon: Icon(
               Icons.add_circle,
               size: 24,
