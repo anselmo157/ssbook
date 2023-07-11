@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:ssbook/models/author_model.dart';
+import 'package:ssbook/models/book_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +13,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController controller;
+  List<BookModel> books = [];
+  List<AuthorModel> authors = [];
 
   @override
   void initState() {
@@ -125,19 +129,8 @@ class _HomePageState extends State<HomePage>
             ),
           );
 
-          QueryResult queryResult = await qlClient.query(
-            QueryOptions(
-              document: gql('''query {
-  allBooks {
-    id
-    name
-    cover
-  }
-}'''),
-            ),
-          );
-
-          print(queryResult.data!['allBooks']);
+          getFavoriteAuthors(qlClient: qlClient);
+          getAllBooks(qlClient: qlClient);
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -178,5 +171,65 @@ class _HomePageState extends State<HomePage>
         ],
       ),
     );
+  }
+
+  void getFavoriteAuthors({GraphQLClient? qlClient}) async {
+    QueryResult queryResult = await qlClient!.query(
+      QueryOptions(
+        document: gql('''query {
+  favoriteAuthors {
+    id
+    name
+    picture
+    booksCount
+    isFavorite
+  }
+}'''),
+      ),
+    );
+
+    for (int i = 0; i < queryResult.data!['favoriteAuthors'].length; i++) {
+      authors.add(
+        AuthorModel(
+          id: int.parse(
+            queryResult.data!['favoriteAuthors'][i]['id'],
+          ),
+          name: queryResult.data!['favoriteAuthors'][i]['name'],
+          picture: queryResult.data!['favoriteAuthors'][i]['picture'],
+          booksCount: queryResult.data!['favoriteAuthors'][i]['booksCount'],
+          isFavorite: queryResult.data!['favoriteAuthors'][i]['isFavorite'],
+        ),
+      );
+    }
+  }
+
+  void getAllBooks({GraphQLClient? qlClient}) async {
+    QueryResult queryResult = await qlClient!.query(
+      QueryOptions(
+        document: gql('''query {
+  allBooks {
+    id
+    name
+    author{
+      name
+    }
+    cover
+    isFavorite
+  }
+}'''),
+      ),
+    );
+
+    for (int i = 0; i < queryResult.data!['allBooks'].length; i++) {
+      books.add(
+        BookModel(
+          id: int.parse(queryResult.data!['allBooks'][i]['id']),
+          name: queryResult.data!['allBooks'][i]['name'],
+          author: queryResult.data!['allBooks'][i]['author']['name'],
+          cover: queryResult.data!['allBooks'][i]['cover'],
+          isFavorite: queryResult.data!['allBooks'][i]['isFavorite'],
+        ),
+      );
+    }
   }
 }

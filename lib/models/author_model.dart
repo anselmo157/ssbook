@@ -5,7 +5,7 @@ class AuthorModel implements Model {
   final int id;
   final String name;
   final String picture;
-  final String booksCount;
+  final int booksCount;
   final bool isFavorite;
   final List<BookModel>? books;
 
