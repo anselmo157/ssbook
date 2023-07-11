@@ -19,6 +19,7 @@ class _HomePageState extends State<HomePage>
   List<BookModel> books = [];
   List<BookModel> favoriteBooks = [];
   List<AuthorModel> authors = [];
+  String userPicture = '';
 
   @override
   void initState() {
@@ -65,7 +66,7 @@ class _HomePageState extends State<HomePage>
             height: 32,
             margin: const EdgeInsets.only(right: 20),
             child: CircleAvatar(
-              child: Image.asset('assets/images/avatar.png'),
+              backgroundImage: NetworkImage(userPicture),
             ),
           ),
         ],
@@ -201,6 +202,7 @@ class _HomePageState extends State<HomePage>
 
     await getFavoriteAuthors(qlClient: qlClient);
     await getAllBooks(qlClient: qlClient);
+    await getUserPicture(qlClient: qlClient);
   }
 
   Future<void> getFavoriteAuthors({GraphQLClient? qlClient}) async {
@@ -266,5 +268,17 @@ class _HomePageState extends State<HomePage>
       books.add(book);
       if (book.isFavorite) favoriteBooks.add(book);
     }
+  }
+
+  Future<void> getUserPicture({GraphQLClient? qlClient}) async {
+    QueryResult queryResult = await qlClient!.query(
+      QueryOptions(
+        document: gql('''query {
+  userPicture 
+}'''),
+      ),
+    );
+
+    userPicture = queryResult.data!['userPicture'];
   }
 }
