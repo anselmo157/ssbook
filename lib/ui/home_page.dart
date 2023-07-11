@@ -109,6 +109,7 @@ class _HomePageState extends State<HomePage>
             bottomRight: Radius.elliptical(size.width * 0.1, 32.0),
           ),
         ),
+        elevation: 0.5,
       ),
       body: FutureBuilder(
         future: populateRequest(),
