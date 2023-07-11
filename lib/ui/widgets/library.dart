@@ -13,6 +13,8 @@ class Library extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ScrollController scrollController = ScrollController();
+
     return Container(
       margin: const EdgeInsets.only(
         left: 20.0,
@@ -74,6 +76,9 @@ class Library extends StatelessWidget {
           SizedBox(
             height: (90.0 * books.length),
             child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              controller: scrollController,
+              scrollDirection: Axis.vertical,
               children: [
                 for (int index = 0; index < books.length; index++)
                   LibraryItem(
