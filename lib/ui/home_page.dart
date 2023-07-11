@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:ssbook/models/author_model.dart';
 import 'package:ssbook/models/book_model.dart';
+import 'package:ssbook/ui/widgets/content_home_page.dart';
+import 'package:ssbook/ui/widgets/favorite_books.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,6 +16,7 @@ class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   late TabController controller;
   List<BookModel> books = [];
+  List<BookModel> favoriteBooks = [];
   List<AuthorModel> authors = [];
 
   @override
@@ -105,32 +108,30 @@ class _HomePageState extends State<HomePage>
           ),
         ),
       ),
-      body: TabBarView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: controller,
-        children: [
-          ListView.builder(
-            itemBuilder: ((context, index) => Text(
-                  index.toString(),
-                )),
-            itemCount: 100,
-          ),
-          Container(),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          HttpLink link = HttpLink(
-              'https://us-central1-ss-devops.cloudfunctions.net/GraphQL');
-          GraphQLClient qlClient = GraphQLClient(
-            link: link,
-            cache: GraphQLCache(
-              store: HiveStore(),
-            ),
-          );
+      body: FutureBuilder(
+        future: populateRequest(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-          getFavoriteAuthors(qlClient: qlClient);
-          getAllBooks(qlClient: qlClient);
+          return TabBarView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: controller,
+            children: [
+              Container(
+                height: size.height * 2,
+                child: ContentHomePage(
+                  books: books,
+                  favoriteBooks: favoriteBooks,
+                  authors: authors,
+                ),
+              ),
+              Container(),
+            ],
+          );
         },
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -172,7 +173,21 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  void getFavoriteAuthors({GraphQLClient? qlClient}) async {
+  Future<void> populateRequest() async {
+    HttpLink link =
+        HttpLink('https://us-central1-ss-devops.cloudfunctions.net/GraphQL');
+    GraphQLClient qlClient = GraphQLClient(
+      link: link,
+      cache: GraphQLCache(
+        store: HiveStore(),
+      ),
+    );
+
+    await getFavoriteAuthors(qlClient: qlClient);
+    await getAllBooks(qlClient: qlClient);
+  }
+
+  Future<void> getFavoriteAuthors({GraphQLClient? qlClient}) async {
     QueryResult queryResult = await qlClient!.query(
       QueryOptions(
         document: gql('''query {
@@ -186,6 +201,8 @@ class _HomePageState extends State<HomePage>
 }'''),
       ),
     );
+
+    authors.clear();
 
     for (int i = 0; i < queryResult.data!['favoriteAuthors'].length; i++) {
       authors.add(
@@ -202,7 +219,7 @@ class _HomePageState extends State<HomePage>
     }
   }
 
-  void getAllBooks({GraphQLClient? qlClient}) async {
+  Future<void> getAllBooks({GraphQLClient? qlClient}) async {
     QueryResult queryResult = await qlClient!.query(
       QueryOptions(
         document: gql('''query {
@@ -219,16 +236,19 @@ class _HomePageState extends State<HomePage>
       ),
     );
 
+    books.clear();
+    favoriteBooks.clear();
+
     for (int i = 0; i < queryResult.data!['allBooks'].length; i++) {
-      books.add(
-        BookModel(
-          id: int.parse(queryResult.data!['allBooks'][i]['id']),
-          name: queryResult.data!['allBooks'][i]['name'],
-          author: queryResult.data!['allBooks'][i]['author']['name'],
-          cover: queryResult.data!['allBooks'][i]['cover'],
-          isFavorite: queryResult.data!['allBooks'][i]['isFavorite'],
-        ),
+      BookModel book = BookModel(
+        id: int.parse(queryResult.data!['allBooks'][i]['id']),
+        name: queryResult.data!['allBooks'][i]['name'],
+        author: queryResult.data!['allBooks'][i]['author']['name'],
+        cover: queryResult.data!['allBooks'][i]['cover'],
+        isFavorite: queryResult.data!['allBooks'][i]['isFavorite'],
       );
+      books.add(book);
+      if (book.isFavorite) favoriteBooks.add(book);
     }
   }
 }
