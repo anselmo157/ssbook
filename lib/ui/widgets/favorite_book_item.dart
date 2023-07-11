@@ -23,13 +23,13 @@ class FavoriteBookItem extends StatelessWidget {
         direction: Axis.vertical,
         spacing: 8,
         children: [
-          Container(
-            width: 136,
-            height: 198,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(url),
-              ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.network(
+              url,
+              width: 136.0,
+              height: 198.0,
+              fit: BoxFit.cover,
             ),
           ),
           SizedBox(

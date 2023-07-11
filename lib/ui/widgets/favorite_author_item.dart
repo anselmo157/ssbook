@@ -17,7 +17,7 @@ class FavoriteAuthorItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 20, top: 20, right: isLast ? 20 : 0),
+      margin: EdgeInsets.only(left: 20, right: isLast ? 20 : 0),
       decoration: BoxDecoration(
         border: Border.all(
           color: const Color(0xFFE0E0E0),

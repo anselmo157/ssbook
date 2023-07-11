@@ -45,8 +45,11 @@ class FavoriteAuthor extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(
+          height: 20,
+        ),
         SizedBox(
-          height: 80,
+          height: 69,
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [

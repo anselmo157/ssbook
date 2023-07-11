@@ -121,13 +121,28 @@ class _HomePageState extends State<HomePage>
             physics: const NeverScrollableScrollPhysics(),
             controller: controller,
             children: [
-              SingleChildScrollView(
-                child: Column(
-                  children: [
-                    FavoriteBook(favoriteBook: favoriteBooks),
-                    FavoriteAuthor(favoriteAuthor: authors),
-                    Library(books: books),
-                  ],
+              Container(
+                color: const Color(0xFFF7F7F7),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      FavoriteBook(favoriteBook: favoriteBooks),
+                      Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(32.0),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            FavoriteAuthor(favoriteAuthor: authors),
+                            Library(books: books),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               Container(),
