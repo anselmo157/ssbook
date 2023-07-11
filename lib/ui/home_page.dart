@@ -4,6 +4,7 @@ import 'package:ssbook/models/author_model.dart';
 import 'package:ssbook/models/book_model.dart';
 import 'package:ssbook/ui/widgets/favorite_author.dart';
 import 'package:ssbook/ui/widgets/favorite_book.dart';
+import 'package:ssbook/ui/widgets/library.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -116,7 +117,6 @@ class _HomePageState extends State<HomePage>
               child: CircularProgressIndicator(),
             );
           }
-
           return TabBarView(
             physics: const NeverScrollableScrollPhysics(),
             controller: controller,
@@ -126,6 +126,7 @@ class _HomePageState extends State<HomePage>
                   children: [
                     FavoriteBook(favoriteBook: favoriteBooks),
                     FavoriteAuthor(favoriteAuthor: authors),
+                    Library(books: books),
                   ],
                 ),
               ),
